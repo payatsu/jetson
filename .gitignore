@@ -1,10 +1,11 @@
-*.mod.c
-*.swp
-*.o
 *.ko
+*.mod.c
+*.o
+*.swp
 .*.ko.cmd
 .*.mod.o.cmd
 .*.o.cmd
 .tmp_versions
 Module.symvers
 modules.order
+tags
