@@ -7,5 +7,6 @@
 .*.o.cmd
 .tmp_versions
 Module.symvers
+build
 modules.order
 tags

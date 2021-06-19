@@ -7,16 +7,16 @@ else
 	export CROSS_COMPILE ?= aarch64-linux-gnu-
 	export KERNELDIR     ?= ../Linux_for_Tegra/source/public/kernel/kernel-4.9
 
-all: $(KERNELDIR)/include/config/auto.conf
-	$(MAKE) V=1 W=1 -C $(KERNELDIR) M=`pwd` modules
+all: build/include/config/auto.conf
+	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build M=`pwd` modules
 
-$(KERNELDIR)/include/config/auto.conf:
+build/include/config/auto.conf:
 	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
-mrproper tegra_defconfig modules_prepare:
-	$(MAKE) V=1 W=1 -C $(KERNELDIR) HOST_EXTRACFLAGS=-fcommon $@
+mrproper tegra_defconfig modules_prepare dtbs:
+	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build HOST_EXTRACFLAGS=-fcommon $@
 
 clean:
-	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
+	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers build modules.order
 endif
