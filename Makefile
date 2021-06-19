@@ -11,10 +11,10 @@ all: $(KERNELDIR)/include/config/auto.conf
 	$(MAKE) V=1 W=1 -C $(KERNELDIR) M=`pwd` modules
 
 $(KERNELDIR)/include/config/auto.conf:
-	$(MAKE) defconfig
+	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
-mrproper defconfig modules_prepare:
+mrproper tegra_defconfig modules_prepare:
 	$(MAKE) V=1 W=1 -C $(KERNELDIR) HOST_EXTRACFLAGS=-fcommon $@
 
 clean:
