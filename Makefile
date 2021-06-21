@@ -5,6 +5,7 @@ ifneq ($(KERNELRELEASE),)
 else
 	export ARCH          ?= arm64
 	export CROSS_COMPILE ?= aarch64-linux-gnu-
+	export LOCALVERSION  ?= -tegra
 	export KERNELDIR     ?= ../Linux_for_Tegra/source/public/kernel/kernel-4.9
 
 all: build/include/config/auto.conf
