@@ -13,4 +13,5 @@ l4t-gcc-*-*-*-toolchain-64-bit.tar.xz
 modules.order
 public_sources.tbz2
 tags
+tegra186_linux_r*.5.1_aarch64.tbz2
 toolchain/

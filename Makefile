@@ -27,9 +27,18 @@ build/include/config/auto.conf: setup
 mrproper tegra_defconfig modules_prepare dtbs: setup
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build HOST_EXTRACFLAGS=-fcommon $@
 
-setup: upstream toolchain
+setup: l4t l4t-src toolchain
 
-upstream: Linux_for_Tegra/source/public/kernel/nvidia/NVIDIA-REVIEWERS
+l4t: Linux_for_Tegra/flash.sh
+
+Linux_for_Tegra/flash.sh: tegra186_linux_r$(L4T_MAJOR).$(L4T_MINOR)_aarch64.tbz2
+	tar xjvf $<
+	touch $@
+
+tegra186_linux_r$(L4T_MAJOR).$(L4T_MINOR)_aarch64.tbz2:
+	wget https://developer.nvidia.com/embedded/l4t/r$(L4T_MAJOR)_release_v$(L4T_MINOR)/r$(L4T_MAJOR)_release_v$(L4T_MINOR)/t186/$@
+
+l4t-src: Linux_for_Tegra/source/public/kernel/nvidia/NVIDIA-REVIEWERS
 
 Linux_for_Tegra/source/public/kernel/nvidia/NVIDIA-REVIEWERS: Linux_for_Tegra/source/public/kernel_src.tbz2
 	tar xjvf $< -C $(dir $<)
