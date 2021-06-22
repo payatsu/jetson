@@ -6,21 +6,23 @@ else
 	export ARCH          ?= arm64
 	export CROSS_COMPILE ?= aarch64-linux-gnu-
 	export LOCALVERSION  ?= -tegra
-	export KERNELDIR     ?= $(wildcard Linux_for_Tegra/source/public/kernel/kernel-*.*)
+	export KERNELDIR     ?= Linux_for_Tegra/source/public/kernel/kernel-4.9
 
 	cross_toolchain = l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(realpath toolchain/bin):$(PATH)
 
 .PHONY: all mrproper tegra_defconfig modules_prepare dtbs toolchain clean
 
-all: build/include/config/auto.conf
+all: $(module).ko
+
+$(module).ko: build/include/config/auto.conf
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build M=`pwd` modules
 
-build/include/config/auto.conf:
+build/include/config/auto.conf: setup
 	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
-mrproper tegra_defconfig modules_prepare dtbs:
+mrproper tegra_defconfig modules_prepare dtbs: setup
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build HOST_EXTRACFLAGS=-fcommon $@
 
 setup: upstream toolchain
