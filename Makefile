@@ -8,6 +8,8 @@ else
 	export LOCALVERSION  ?= -tegra
 	export KERNELDIR     ?= Linux_for_Tegra/source/public/kernel/kernel-4.9
 
+	L4T_MAJOR := 32
+	L4T_MINOR := 5.1
 	cross_toolchain = l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(realpath toolchain/bin):$(PATH)
 
@@ -38,7 +40,7 @@ Linux_for_Tegra/source/public/kernel_src.tbz2: public_sources.tbz2
 	touch $@
 
 public_sources.tbz2:
-	wget https://developer.nvidia.com/embedded/l4t/r32_release_v5.1/r32_release_v5.1/sources/t186/$@
+	wget https://developer.nvidia.com/embedded/l4t/r$(L4T_MAJOR)_release_v$(L4T_MINOR)/r$(L4T_MAJOR)_release_v$(L4T_MINOR)/sources/t186/$@
 
 toolchain: toolchain/bin/aarch64-linux-gnu-gcc
 
