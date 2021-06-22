@@ -6,7 +6,9 @@
 .*.mod.o.cmd
 .*.o.cmd
 .tmp_versions
+Linux_for_Tegra/
 Module.symvers
-build
+build/
 modules.order
+public_sources.tbz2
 tags
