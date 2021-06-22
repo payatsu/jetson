@@ -9,6 +9,8 @@
 Linux_for_Tegra/
 Module.symvers
 build/
+l4t-gcc-*-*-*-toolchain-64-bit.tar.xz
 modules.order
 public_sources.tbz2
 tags
+toolchain/

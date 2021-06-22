@@ -29,6 +29,14 @@ Linux_for_Tegra/source/public/kernel_src.tbz2: public_sources.tbz2
 public_sources.tbz2:
 	wget https://developer.nvidia.com/embedded/l4t/r32_release_v5.1/r32_release_v5.1/sources/t186/$@
 
+toolchain/bin/aarch64-linux-gnu-gcc: l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
+	mkdir -p toolchain
+	tar xJvf l4t-gcc-7-3-1-toolchain-64-bit.tar.xz -C toolchain --strip-components 1
+	touch $@
+
+l4t-gcc-7-3-1-toolchain-64-bit.tar.xz:
+	wget -O $@ https://developer.nvidia.com/embedded/dlc/$(patsubst %.tar.xz,%,$@)
+
 clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers build modules.order
 endif
