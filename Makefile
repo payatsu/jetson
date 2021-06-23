@@ -13,7 +13,7 @@ else
 	cross_toolchain = l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(realpath toolchain/bin):$(PATH)
 
-.PHONY: all mrproper tegra_defconfig modules_prepare dtbs toolchain clean
+.PHONY: all mrproper tegra_defconfig modules_prepare dtbs setup l4t l4t-src toolchain clean
 
 all: $(module).ko
 
