@@ -8,24 +8,25 @@ else
 	export LOCALVERSION  ?= -tegra
 	export KERNELDIR     ?= Linux_for_Tegra/source/public/kernel/kernel-4.9
 
+	builddir  := $(abspath build)
 	L4T_MAJOR := 32
 	L4T_MINOR := 5.1
 	cross_toolchain = l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
-	PATH := $(realpath toolchain/bin):$(PATH)
+	PATH := $(abspath toolchain/bin):$(PATH)
 
-.PHONY: all mrproper tegra_defconfig modules_prepare dtbs setup l4t l4t-src toolchain clean
+.PHONY: all mrproper tegra_defconfig modules_prepare dtbs setup l4t l4t-src toolchain clean dist-clean
 
 all: $(module).ko
 
-$(module).ko: build/include/config/auto.conf
-	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build M=`pwd` modules
+$(module).ko: $(builddir)/include/config/auto.conf
+	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) M=`pwd` modules
 
-build/include/config/auto.conf: setup
+$(builddir)/include/config/auto.conf: setup
 	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
 mrproper tegra_defconfig modules_prepare dtbs: setup
-	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=`pwd`/build HOST_EXTRACFLAGS=-fcommon $@
+	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
 setup: l4t l4t-src toolchain
 
@@ -62,5 +63,8 @@ $(cross_toolchain):
 	wget -O $@ https://developer.nvidia.com/embedded/dlc/$(patsubst %.tar.xz,%,$@)
 
 clean:
-	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers build modules.order
+	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
+
+dist-clean: clean
+	$(RM) -r Linux_for_Tegra toolchain $(builddir)
 endif
