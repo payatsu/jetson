@@ -4,7 +4,7 @@ ifneq ($(KERNELRELEASE),)
 	obj-m := $(module).o
 else
 	export ARCH          ?= arm64
-	export CROSS_COMPILE ?= aarch64-linux-gnu-
+	export CROSS_COMPILE ?= $(shell which ccache > /dev/null && echo ccache) aarch64-linux-gnu-
 	export LOCALVERSION  ?= -tegra
 	export KERNELDIR     ?= Linux_for_Tegra/source/public/kernel/kernel-4.9
 
