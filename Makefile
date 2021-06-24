@@ -9,8 +9,8 @@ else
 	export KERNELDIR     ?= Linux_for_Tegra/source/public/kernel/kernel-4.9
 
 	builddir := $(abspath build)
-	l4t_major := 32
-	l4t_minor := 5.1
+	l4t_major ?= 32
+	l4t_minor ?= 5.1
 	cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(abspath toolchain/bin):$(PATH)
 
