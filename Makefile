@@ -21,11 +21,11 @@ all: $(module).ko
 $(module).ko: $(builddir)/include/config/auto.conf
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) M=`pwd` modules
 
-$(builddir)/include/config/auto.conf: setup
+$(builddir)/include/config/auto.conf:
 	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
-mrproper tegra_defconfig modules_prepare dtbs: setup
+mrproper tegra_defconfig modules_prepare dtbs: $(KERNELDIR)/Makefile
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
 setup: l4t l4t-src toolchain
@@ -39,9 +39,9 @@ Linux_for_Tegra/flash.sh: tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
 tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
 	wget https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$@
 
-l4t-src: Linux_for_Tegra/source/public/kernel/nvidia/NVIDIA-REVIEWERS
+l4t-src: $(KERNELDIR)/Makefile
 
-Linux_for_Tegra/source/public/kernel/nvidia/NVIDIA-REVIEWERS: Linux_for_Tegra/source/public/kernel_src.tbz2
+$(KERNELDIR)/Makefile: Linux_for_Tegra/source/public/kernel_src.tbz2
 	tar xjvf $< -C $(dir $<)
 	touch $@
 
