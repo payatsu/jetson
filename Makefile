@@ -14,7 +14,7 @@ else
 	cross_toolchain = l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(abspath toolchain/bin):$(PATH)
 
-.PHONY: all mrproper tegra_defconfig modules_prepare dtbs setup l4t l4t-src toolchain clean dist-clean
+.PHONY: all mrproper tegra_defconfig modules_prepare dtbs setup l4t l4t-src toolchain clean distclean
 
 all: $(module).ko
 
@@ -68,6 +68,6 @@ $(cross_toolchain):
 clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
 
-dist-clean: clean
+distclean: clean
 	$(RM) -r tags Linux_for_Tegra toolchain $(builddir)
 endif
