@@ -28,6 +28,9 @@ $(builddir)/include/config/auto.conf:
 mrproper tegra_defconfig modules_prepare dtbs: $(KERNELDIR)/Makefile
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
+tags:
+	ctags -R *.[ch] $(KERNELDIR) $(KERNELDIR)/../nvidia
+
 setup: l4t l4t-src toolchain
 
 l4t: Linux_for_Tegra/flash.sh
@@ -66,5 +69,5 @@ clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
 
 dist-clean: clean
-	$(RM) -r Linux_for_Tegra toolchain $(builddir)
+	$(RM) -r tags Linux_for_Tegra toolchain $(builddir)
 endif
