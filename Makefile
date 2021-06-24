@@ -40,7 +40,13 @@ Linux_for_Tegra/flash.sh: tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
 	touch $@
 
 tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
-	wget https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$@
+	for url in \
+			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$@ \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/T186/$@ \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/T186/$@ \
+			; do \
+		wget $$url && exit; \
+	done
 
 l4t-src: $(KERNELDIR)/Makefile
 
@@ -53,7 +59,13 @@ Linux_for_Tegra/source/public/kernel_src.tbz2: public_sources.tbz2
 	touch $@
 
 public_sources.tbz2:
-	wget https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$@
+	for url in \
+			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$@ \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/sources/T186/$@ \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/Sources/T186/$@ \
+			; do \
+		wget $$url && exit; \
+	done
 
 toolchain: toolchain/bin/aarch64-linux-gnu-gcc
 
