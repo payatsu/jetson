@@ -1,8 +1,7 @@
 module ?= mymodule
+obj-m := $(module).o
 
-ifneq ($(KERNELRELEASE),)
-	obj-m := $(module).o
-else
+ifeq ($(KERNELRELEASE),)
 	export ARCH          ?= arm64
 	export CROSS_COMPILE ?= $(shell which ccache > /dev/null && echo ccache) aarch64-linux-gnu-
 	export LOCALVERSION  ?= -tegra
@@ -18,7 +17,7 @@ else
 
 all: $(module).ko
 
-$(module).ko: $(builddir)/include/config/auto.conf
+$(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) M=`pwd` modules
 
 $(builddir)/include/config/auto.conf:
