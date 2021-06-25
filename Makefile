@@ -24,7 +24,7 @@ $(builddir)/include/config/auto.conf:
 	$(MAKE) tegra_defconfig
 	$(MAKE) modules_prepare
 
-mrproper tegra_defconfig modules_prepare dtbs: $(KERNELDIR)/Makefile
+mrproper tegra_defconfig modules_prepare dtbs: l4t-src toolchain
 	$(MAKE) -C $(KERNELDIR) V=1 W=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
 tags:
