@@ -16,9 +16,10 @@ ifeq ($(KERNELRELEASE),)
 ifeq ($(realpath /etc/nv_tegra_release),)
 	export INSTALL_PATH     ?= $(abspath rootfs)
 	export INSTALL_MOD_PATH ?= $(abspath rootfs)
+	export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
 endif
 
-.PHONY: all mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install setup l4t l4t-src toolchain clean distclean
+.PHONY: all mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install headers_install setup l4t l4t-src toolchain clean distclean
 
 all: $(module).ko
 
@@ -32,7 +33,7 @@ $(builddir)/include/config/auto.conf:
 # 'W=1' causes build error '-Werror=missing-include-dirs' about
 # 'kernel/nvgpu-next/include' and 'kernel/nvidia-t23x/include',
 # therefore do not add 'W=1'.
-mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install: l4t-src toolchain
+mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install headers_install: l4t-src toolchain
 	$(MAKE) -C $(KERNELDIR) V=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
 dtbs Image modules: $(builddir)/.config
