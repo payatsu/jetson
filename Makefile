@@ -13,7 +13,12 @@ ifeq ($(KERNELRELEASE),)
 	cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 	PATH := $(abspath toolchain/bin):$(PATH)
 
-.PHONY: all mrproper tegra_defconfig modules_prepare dtbs Image setup l4t l4t-src toolchain clean distclean
+ifeq ($(realpath /etc/nv_tegra_release),)
+	export INSTALL_PATH     ?= $(abspath rootfs)
+	export INSTALL_MOD_PATH ?= $(abspath rootfs)
+endif
+
+.PHONY: all mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install setup l4t l4t-src toolchain clean distclean
 
 all: $(module).ko
 
@@ -27,10 +32,10 @@ $(builddir)/include/config/auto.conf:
 # 'W=1' causes build error '-Werror=missing-include-dirs' about
 # 'kernel/nvgpu-next/include' and 'kernel/nvidia-t23x/include',
 # therefore do not add 'W=1'.
-mrproper tegra_defconfig modules_prepare dtbs Image: l4t-src toolchain
+mrproper tegra_defconfig modules_prepare dtbs Image modules install modules_install: l4t-src toolchain
 	$(MAKE) -C $(KERNELDIR) V=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
 
-dtbs Image: $(builddir)/.config
+dtbs Image modules: $(builddir)/.config
 
 $(builddir)/.config:
 	$(MAKE) tegra_defconfig
@@ -88,5 +93,5 @@ clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
 
 distclean: clean
-	$(RM) -r tags Linux_for_Tegra toolchain $(builddir)
+	$(RM) -r tags Linux_for_Tegra toolchain rootfs $(builddir)
 endif
