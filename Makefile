@@ -19,7 +19,10 @@ ifeq ($(realpath /etc/nv_tegra_release),)
 	export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
 endif
 
-.PHONY: all mrproper tegra_defconfig olddefconfig modules_prepare dtbs Image modules install modules_install headers_install setup l4t l4t-src toolchain clean distclean
+.PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
+	modules_prepare dtbs Image modules \
+	install modules_install headers_install \
+	clean distclean setup l4t l4t-src toolchain
 
 all: $(module).ko
 
@@ -28,6 +31,9 @@ $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
 
 $(builddir)/include/config/auto.conf: $(builddir)/.config
 	$(MAKE) modules_prepare
+
+diffconfig: $(builddir)/.config
+	$(kerneldir)/scripts/diffconfig $<.orig $<
 
 $(builddir)/.config: scripts/modify-config.sh
 	$(MAKE) tegra_defconfig
@@ -48,6 +54,12 @@ dtbs Image modules: $(builddir)/.config
 
 tags:
 	ctags -R *.[ch] $(kerneldir) $(kerneldir)/../nvidia
+
+clean:
+	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
+
+distclean: clean
+	$(RM) -r tags Linux_for_Tegra toolchain rootfs $(builddir)
 
 setup: l4t l4t-src toolchain
 
@@ -94,10 +106,4 @@ toolchain/bin/aarch64-linux-gnu-gcc: $(cross_toolchain)
 
 $(cross_toolchain):
 	wget -O $@ https://developer.nvidia.com/embedded/dlc/$(patsubst %.tar.xz,%,$@)
-
-clean:
-	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
-
-distclean: clean
-	$(RM) -r tags Linux_for_Tegra toolchain rootfs $(builddir)
 endif
