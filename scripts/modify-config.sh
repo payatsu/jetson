@@ -3,6 +3,9 @@
 config \
 	-e DEBUG_KERNEL \
 	-e DEBUG_INFO \
+	|| exit
+
+config \
 	-e FRAME_POINTER \
 	-e EXPERT \
 	-e KALLSYMS \
