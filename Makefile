@@ -22,7 +22,7 @@ endif
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
 	modules_prepare dtbs Image modules \
 	install modules_install headers_install \
-	clean distclean setup l4t l4t-src toolchain
+	tags clean distclean setup l4t l4t-src toolchain
 
 all: $(module).ko
 
@@ -53,7 +53,19 @@ mrproper tegra_defconfig olddefconfig modules_prepare dtbs Image modules install
 dtbs Image modules: $(builddir)/.config
 
 tags:
-	ctags -R *.[ch] $(kerneldir) $(kerneldir)/../nvidia
+	ctags -R \
+		--exclude=Documentation \
+		--exclude=tools \
+		--exclude=arch \
+		--exclude=amd \
+		--exclude=radeon \
+		--exclude=intel \
+		--exclude=realtek \
+		*.[ch] \
+		$(kerneldir) \
+		$(kerneldir)/arch/arm \
+		$(kerneldir)/arch/arm64 \
+		$(kerneldir)/../nvidia
 
 clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
