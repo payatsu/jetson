@@ -16,9 +16,7 @@ config \
 	|| exit
 
 config \
-	-e PROFILING \
-	-e HAVE_PERF_EVENTS \
-	-e PERF_EVENTS \
+	-e TRACEPOINTS \
 	|| exit
 
 config \
@@ -30,6 +28,12 @@ config \
 	-e MMU \
 	-e UPROBES \
 	-e UPROBE_EVENTS \
+	|| exit
+
+config \
+	-e PROFILING \
+	-e HAVE_PERF_EVENTS \
+	-e PERF_EVENTS \
 	|| exit
 
 config \
