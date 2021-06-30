@@ -3,12 +3,13 @@
 config \
 	-e DEBUG_KERNEL \
 	-e DEBUG_INFO \
-	|| exit
-
-config \
 	-e FRAME_POINTER \
 	-e EXPERT \
 	-e KALLSYMS \
+	|| exit
+
+# KGDB
+config \
 	-e HAVE_ARCH_KGDB \
 	-e KGDB \
 	-E KGDB KGDB_SERIAL_CONSOLE \
@@ -19,6 +20,7 @@ config \
 	-e TRACEPOINTS \
 	|| exit
 
+# kprobes, uprobes
 config \
 	-e HAVE_KPROBES \
 	-e KPROBES \
@@ -30,12 +32,16 @@ config \
 	-e UPROBE_EVENTS \
 	|| exit
 
+# perf
 config \
 	-e PROFILING \
 	-e HAVE_PERF_EVENTS \
 	-e PERF_EVENTS \
+	-e HAVE_PERF_REGS \
+	-e HAVE_PERF_USER_STACK_DUMP \
 	|| exit
 
+# eBPF
 config \
 	-e BPF \
 	-e BPF_SYSCALL \
