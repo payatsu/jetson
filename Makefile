@@ -16,18 +16,23 @@ PATH := $(abspath toolchain/bin):$(PATH)
 all: $(module).ko
 
 ifeq ($(realpath /etc/nv_tegra_release),)
-export INSTALL_PATH     ?= $(abspath rootfs)
+export INSTALL_PATH     ?= $(abspath rootfs)/boot
 export INSTALL_MOD_PATH ?= $(abspath rootfs)
 export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
 
 install: $(INSTALL_PATH)
 $(INSTALL_PATH):
 	mkdir -p $@
+
+release:
+	find $(INSTALL_MOD_PATH) -type l -a \( -name source -o -name build \) -exec rm -fv {} \;
+	tar cJvf $(module)-`grep -oPe '(?<=^MODULE_VERSION\(")[0-9.]+(?="\);$$)' $(module).c`.$(ARCH).tar.xz \
+		--owner root --group root -C rootfs boot lib usr
 endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
 	modules_prepare dtbs Image modules \
-	install modules_install headers_install \
+	install modules_install headers_install release \
 	tags clean distclean setup l4t l4t-src toolchain
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
