@@ -2,29 +2,33 @@ module ?= mymodule
 obj-m := $(module).o
 
 ifeq ($(KERNELRELEASE),)
-	export ARCH          ?= arm64
-	export CROSS_COMPILE ?= $(shell which ccache > /dev/null && echo ccache) aarch64-linux-gnu-
-	export LOCALVERSION  ?= -tegra
+export ARCH          ?= arm64
+export CROSS_COMPILE ?= $(shell which ccache > /dev/null && echo ccache) aarch64-linux-gnu-
+export LOCALVERSION  ?= -tegra
 
-	builddir := $(abspath build)
-	l4t_major ?= 32
-	l4t_minor ?= 5.1
-	kerneldir ?= $(abspath Linux_for_Tegra/source/public/kernel/kernel-4.9)
-	cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
-	PATH := $(abspath toolchain/bin):$(PATH)
+builddir := $(abspath build)
+l4t_major ?= 32
+l4t_minor ?= 5.1
+kerneldir ?= $(abspath Linux_for_Tegra/source/public/kernel/kernel-4.9)
+cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
+PATH := $(abspath toolchain/bin):$(PATH)
+
+all: $(module).ko
 
 ifeq ($(realpath /etc/nv_tegra_release),)
-	export INSTALL_PATH     ?= $(abspath rootfs)
-	export INSTALL_MOD_PATH ?= $(abspath rootfs)
-	export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
+export INSTALL_PATH     ?= $(abspath rootfs)
+export INSTALL_MOD_PATH ?= $(abspath rootfs)
+export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
+
+install: $(INSTALL_PATH)
+$(INSTALL_PATH):
+	mkdir -p $@
 endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
 	modules_prepare dtbs Image modules \
 	install modules_install headers_install \
 	tags clean distclean setup l4t l4t-src toolchain
-
-all: $(module).ko
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
 	$(MAKE) -C $(kerneldir) V=1 W=1 O=$(builddir) M=`pwd` modules
