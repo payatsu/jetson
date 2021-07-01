@@ -24,6 +24,10 @@ install: $(INSTALL_PATH)
 $(INSTALL_PATH):
 	mkdir -p $@
 
+dtbs_install: dtbs
+	cp -Tr $(builddir)/arch/$(ARCH)/boot/dts $(INSTALL_PATH)/dtb
+	$(RM) -r $(INSTALL_PATH)/dtb/_ddot_
+
 release:
 	find $(INSTALL_MOD_PATH) -type l -a \( -name source -o -name build \) -exec rm -fv {} \;
 	tar cJvf $(module)-`grep -oPe '(?<=^MODULE_VERSION\(")[0-9.]+(?="\);$$)' $(module).c`.$(ARCH).tar.xz \
@@ -32,7 +36,7 @@ endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
 	modules_prepare dtbs Image modules \
-	install modules_install headers_install release \
+	install modules_install headers_install dtbs_install release \
 	tags clean distclean setup l4t l4t-src toolchain
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
