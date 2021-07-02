@@ -29,7 +29,8 @@ dtbs_install: dtbs
 	$(RM) -r $(INSTALL_PATH)/dtb/_ddot_
 
 release:
-	find $(INSTALL_MOD_PATH) -type l -a \( -name source -o -name build \) -exec rm -fv {} \;
+	find $(INSTALL_MOD_PATH) -type l -a \( -name source -o -name build \) -exec rm -fv {} +
+	find $(INSTALL_HDR_PATH) -type f -a \( -name .install -o -name ..install.cmd \) -exec rm -fv {} +
 	tar cJvf $(module)-`grep -oPe '(?<=^MODULE_VERSION\(")[0-9.]+(?="\);$$)' $(module).c`.$(ARCH).tar.xz \
 		--owner root --group root -C rootfs boot lib usr
 endif
