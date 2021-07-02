@@ -5,6 +5,9 @@ config \
 	-e DEBUG_INFO \
 	-e FRAME_POINTER \
 	-e EXPERT \
+	-e PROC_FS \
+	-e IKCONFIG \
+	-e IKCONFIG_PROC \
 	-e KALLSYMS \
 	|| exit
 
