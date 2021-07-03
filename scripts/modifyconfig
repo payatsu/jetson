@@ -46,17 +46,26 @@ config \
 		-e SRCU \
 	|| exit
 
-config \
-	-e TRACEPOINTS \
-	|| exit
-
 # kprobes, uprobes
 config \
 	-e MODULES \
-	-e HAVE_KPROBES \
 	-e KPROBES \
-	-e HAVE_REGS_AND_STACK_ACCESS_API \
+		-e KALLSYMS \
+	-e FTRACE \
 	-e KPROBE_EVENTS \
+		-e TRACING \
+			-e RING_BUFFER \
+				-e TRACE_CLOCK \
+				-e IRQ_WORK \
+			-e STACKTRACE \
+			-e TRACEPOINTS \
+			-e NOP_TRACER \
+			-e BINARY_PRINTF \
+			-e EVENT_TRACING \
+				-e CONTEXT_SWITCH_TRACER \
+				-e GLOB \
+		-e PROBE_EVENTS \
+		-e DYNAMIC_EVENTS \
 	-e UPROBES \
 	-e UPROBE_EVENTS \
 	|| exit
