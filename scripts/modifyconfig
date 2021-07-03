@@ -26,10 +26,10 @@ config \
 
 # KGDB
 config \
-	-e HAVE_ARCH_KGDB \
 	-e KGDB \
 	-e TTY \
 	-e VT \
+		-e INPUT \
 	-e HW_CONSOLE \
 	-e KGDB_SERIAL_CONSOLE \
 		-e CONSOLE_POLL \
