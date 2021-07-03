@@ -19,6 +19,7 @@ config \
 	-e EXPERT \
 	-e PROC_FS \
 	-e SYSFS \
+		-e KERNFS \
 	-e IKCONFIG \
 	-e IKCONFIG_PROC \
 	-e KALLSYMS \
