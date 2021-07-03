@@ -70,3 +70,24 @@ config \
 	-m NET_CLS_BPF \
 	-m NET_ACT_BPF \
 	|| exit
+
+# Ftrace
+config \
+	-e FTRACE \
+	-e FUNCTION_TRACER \
+	-e FUNCTION_GRAPH_TRACER \
+	-e FTRACE_SYSCALLS \
+	-e TRACER_SNAPSHOT \
+	-e STACK_TRACER \
+	-e DYNAMIC_FTRACE \
+	|| exit
+
+# Ftrace(additional)
+config \
+	-e IRQSOFF_TRACER \
+	-e SCHED_TRACER \
+	-e SYSFS \
+	-e BLOCK \
+	-e BLK_DEV_IO_TRACE \
+	-e FUNCTION_PROFILER \
+	|| exit
