@@ -1,11 +1,25 @@
 #!/bin/sh
 
+if echo "$@" | grep -qe --verify; then
+	sed -e 's/#.\+$//' $0 | \
+		grep -oe '-[em] [[:upper:]_]\+' | \
+		sed -e 's/^-. //' | sort | uniq | sed -e 's/^/CONFIG_/' | \
+	while read line; do
+		grep -e "\\<${line}\\>" .config > /dev/null || echo ${line}
+	done | sed -e '
+		1iThese configs are not found in .config:
+		s/^/- /'
+	exit
+fi
+
 config \
 	-e DEBUG_KERNEL \
 	-e DEBUG_INFO \
+	-e ARCH_WANT_FRAME_POINTERS \
 	-e FRAME_POINTER \
 	-e EXPERT \
 	-e PROC_FS \
+	-e SYSFS \
 	-e IKCONFIG \
 	-e IKCONFIG_PROC \
 	-e KALLSYMS \
@@ -15,8 +29,11 @@ config \
 config \
 	-e HAVE_ARCH_KGDB \
 	-e KGDB \
-	-E KGDB KGDB_SERIAL_CONSOLE \
-	-E KGDB KGDB_KDB \
+	-e TTY \
+	-e HW_CONSOLE \
+	-e VT \
+	-e KGDB_SERIAL_CONSOLE \
+	-e KGDB_KDB \
 	|| exit
 
 config \
@@ -25,6 +42,7 @@ config \
 
 # kprobes, uprobes
 config \
+	-e MODULES \
 	-e HAVE_KPROBES \
 	-e KPROBES \
 	-e HAVE_REGS_AND_STACK_ACCESS_API \
@@ -49,6 +67,7 @@ config \
 	-e BPF \
 	-e BPF_SYSCALL \
 	-e HAVE_EBPF_JIT \
+	-e MODULES \
 	-e BPF_JIT \
 	-e BPF_EVENTS \
 	-e IKHEADERS \

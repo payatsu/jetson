@@ -49,7 +49,7 @@ $(builddir)/include/config/auto.conf: $(builddir)/.config
 diffconfig: $(builddir)/.config
 	$(kerneldir)/scripts/diffconfig $<.orig $<
 
-$(builddir)/.config: scripts/modify-config.sh
+$(builddir)/.config: scripts/modifyconfig
 	$(MAKE) tegra_defconfig
 	cp $@ $@.orig
 	cd $(dir $@); \
