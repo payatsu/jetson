@@ -46,7 +46,7 @@ config \
 	-e KPROBES \
 	-e FTRACE \
 	-e KPROBE_EVENTS \
-	-e UPROBES \
+	-e PERF_EVENTS \
 	-e UPROBE_EVENTS \
 	|| exit
 
