@@ -48,6 +48,7 @@ $(builddir)/include/config/auto.conf: $(builddir)/.config
 
 diffconfig: $(builddir)/.config
 	$(kerneldir)/scripts/diffconfig $<.orig $<
+	cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/scripts/modifyconfig --verify
 
 $(builddir)/.config: scripts/modifyconfig
 	$(MAKE) tegra_defconfig

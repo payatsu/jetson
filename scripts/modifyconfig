@@ -2,7 +2,7 @@
 
 if echo "$@" | grep -qe --verify; then
 	maybe_error=0
-	trap 'maybe_error=1' USR1
+	trap 'maybe_error=0 # set to 1 if prefer to treat as error ' USR1
 	sed -e 's/#.\+$//' $0 | \
 		grep -oe '-[em] [[:upper:]_]\+' | \
 		sed -e 's/^-. //' | sort | uniq | sed -e 's/^/CONFIG_/' | \
@@ -11,7 +11,7 @@ if echo "$@" | grep -qe --verify; then
 		echo ${line}
 		kill -s USR1 $$
 	done | sed -e '
-		1iERROR. The following configs may not be applied to .config:
+		1iWARNING. The following configs may not be applied to .config:
 		s/^/- /'
 	exit ${maybe_error}
 fi
