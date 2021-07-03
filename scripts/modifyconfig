@@ -54,10 +54,15 @@ config \
 config \
 	-e BPF \
 	-e BPF_SYSCALL \
-	-e HAVE_EBPF_JIT \
 	-e MODULES \
 	-e BPF_JIT \
+	-e KPROBES \
+	-e FTRACE \
+	-e KPROBE_EVENTS \
+	-e UPROBE_EVENTS \
+	-e PERF_EVENTS \
 	-e BPF_EVENTS \
+	-e SYSFS \
 	-e IKHEADERS \
 	-m NET_CLS_BPF \
 	-m NET_ACT_BPF \
