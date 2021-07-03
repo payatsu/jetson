@@ -1,15 +1,19 @@
 #!/bin/sh
 
 if echo "$@" | grep -qe --verify; then
+	maybe_error=0
+	trap 'maybe_error=1' USR1
 	sed -e 's/#.\+$//' $0 | \
 		grep -oe '-[em] [[:upper:]_]\+' | \
 		sed -e 's/^-. //' | sort | uniq | sed -e 's/^/CONFIG_/' | \
 	while read line; do
-		grep -e "\\<${line}\\>" .config > /dev/null || echo ${line}
+		grep -e "\\<${line}\\>" .config > /dev/null && continue
+		echo ${line}
+		kill -s USR1 $$
 	done | sed -e '
-		1iThese configs are not found in .config:
+		1iERROR. The following configs may not be applied to .config:
 		s/^/- /'
-	exit
+	exit ${maybe_error}
 fi
 
 config \

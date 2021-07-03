@@ -52,10 +52,9 @@ diffconfig: $(builddir)/.config
 $(builddir)/.config: scripts/modifyconfig
 	$(MAKE) tegra_defconfig
 	cp $@ $@.orig
-	cd $(dir $@); \
-		PATH=$(kerneldir)/scripts:$${PATH}; \
-		$(abspath $<)
+	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<)
 	$(MAKE) olddefconfig
+	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<) --verify
 	$(kerneldir)/scripts/diffconfig $@.orig $@
 
 # 'W=1' causes build error '-Werror=missing-include-dirs' about
