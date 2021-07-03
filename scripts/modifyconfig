@@ -19,7 +19,6 @@ config \
 	-e EXPERT \
 	-e PROC_FS \
 	-e SYSFS \
-		-e KERNFS \
 	-e IKCONFIG \
 	-e IKCONFIG_PROC \
 	-e KALLSYMS \
@@ -30,11 +29,8 @@ config \
 	-e KGDB \
 	-e TTY \
 	-e VT \
-		-e INPUT \
 	-e HW_CONSOLE \
 	-e KGDB_SERIAL_CONSOLE \
-		-e CONSOLE_POLL \
-		-e MAGIC_SYSRQ \
 	-e KGDB_KDB \
 	|| exit
 
@@ -42,30 +38,14 @@ config \
 config \
 	-e PROFILING \
 	-e PERF_EVENTS \
-		-e IRQ_WORK \
-		-e SRCU \
 	|| exit
 
 # kprobes, uprobes
 config \
 	-e MODULES \
 	-e KPROBES \
-		-e KALLSYMS \
 	-e FTRACE \
 	-e KPROBE_EVENTS \
-		-e TRACING \
-			-e RING_BUFFER \
-				-e TRACE_CLOCK \
-				-e IRQ_WORK \
-			-e STACKTRACE \
-			-e TRACEPOINTS \
-			-e NOP_TRACER \
-			-e BINARY_PRINTF \
-			-e EVENT_TRACING \
-				-e CONTEXT_SWITCH_TRACER \
-				-e GLOB \
-		-e PROBE_EVENTS \
-		-e DYNAMIC_EVENTS \
 	-e UPROBES \
 	-e UPROBE_EVENTS \
 	|| exit
