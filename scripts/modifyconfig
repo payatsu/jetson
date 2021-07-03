@@ -55,6 +55,7 @@ config \
 	-e BPF \
 	-e BPF_SYSCALL \
 	-e MODULES \
+	-e NET \
 	-e BPF_JIT \
 	-e KPROBES \
 	-e FTRACE \
@@ -64,6 +65,8 @@ config \
 	-e BPF_EVENTS \
 	-e SYSFS \
 	-e IKHEADERS \
+	-e NET_SCHED \
+	-e NET_CLS_ACT \
 	-m NET_CLS_BPF \
 	-m NET_ACT_BPF \
 	|| exit
