@@ -15,7 +15,6 @@ fi
 config \
 	-e DEBUG_KERNEL \
 	-e DEBUG_INFO \
-	-e ARCH_WANT_FRAME_POINTERS \
 	-e FRAME_POINTER \
 	-e EXPERT \
 	-e PROC_FS \
@@ -30,9 +29,11 @@ config \
 	-e HAVE_ARCH_KGDB \
 	-e KGDB \
 	-e TTY \
-	-e HW_CONSOLE \
 	-e VT \
+	-e HW_CONSOLE \
 	-e KGDB_SERIAL_CONSOLE \
+		-e CONSOLE_POLL \
+		-e MAGIC_SYSRQ \
 	-e KGDB_KDB \
 	|| exit
 
