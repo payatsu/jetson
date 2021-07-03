@@ -38,6 +38,14 @@ config \
 	-e KGDB_KDB \
 	|| exit
 
+# perf
+config \
+	-e PROFILING \
+	-e PERF_EVENTS \
+		-e IRQ_WORK \
+		-e SRCU \
+	|| exit
+
 config \
 	-e TRACEPOINTS \
 	|| exit
@@ -49,19 +57,8 @@ config \
 	-e KPROBES \
 	-e HAVE_REGS_AND_STACK_ACCESS_API \
 	-e KPROBE_EVENTS \
-	-e ARCH_SUPPORTS_UPROBES \
-	-e MMU \
 	-e UPROBES \
 	-e UPROBE_EVENTS \
-	|| exit
-
-# perf
-config \
-	-e PROFILING \
-	-e HAVE_PERF_EVENTS \
-	-e PERF_EVENTS \
-	-e HAVE_PERF_REGS \
-	-e HAVE_PERF_USER_STACK_DUMP \
 	|| exit
 
 # eBPF
