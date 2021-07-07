@@ -95,3 +95,12 @@ config \
 	-e BLK_DEV_IO_TRACE \
 	-e FUNCTION_PROFILER \
 	|| exit
+
+# dynamig debug
+config \
+	-e EXPERT \
+	-e PRINTK \
+	-e DEBUG_FS \
+	-e PROC_FS \
+	-e DYNAMIC_DEBUG \
+	|| exit
