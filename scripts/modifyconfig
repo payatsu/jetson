@@ -4,10 +4,15 @@ if echo "$@" | grep -qe --verify; then
 	maybe_error=0
 	trap 'maybe_error=0 # set to 1 if prefer to treat as error ' USR1
 	sed -e 's/#.\+$//' $0 | \
-		grep -oe '-[em] [[:upper:]_]\+' | \
-		sed -e 's/^-. //' | sort | uniq | sed -e 's/^/CONFIG_/' | \
+		grep -oe '-[dem] [[:upper:]_]\+' | \
+		sort | uniq | sed -e '
+			s/^-. /&CONFIG_/
+			/^-d /{s//# /;s/$/ is not set/}
+			/^-e /{s///;s/$/=y/}
+			/^-m /{s///;s/$/=m/}
+			' | \
 	while read line; do
-		grep -e "\\<${line}\\>" .config > /dev/null && continue
+		grep -e "^${line}\$" .config > /dev/null && continue
 		echo ${line}
 		kill -s USR1 $$
 	done | sed -e '
