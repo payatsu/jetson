@@ -91,17 +91,19 @@ setup: l4t l4t-src toolchain
 
 l4t: Linux_for_Tegra/flash.sh
 
-Linux_for_Tegra/flash.sh: tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
+Linux_for_Tegra/flash.sh: l4t/r$(l4t_major).$(l4t_minor)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
 	tar xjvf $<
 	touch $@
 
-tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
+l4t/r$(l4t_major).$(l4t_minor)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
+	mkdir -p $(dir $@)
 	for url in \
-			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$@ \
-			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/T186/$@ \
-			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/T186/$@ \
+			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$(notdir $@) \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/T186/$(notdir $@) \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/T186/$(notdir $@) \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/t186ref_release_aarch64/$(notdir $@) \
 			; do \
-		wget $${url} && exit; \
+		wget -O $@ $${url} && exit; \
 	done
 
 l4t-src: $(kerneldir)/Makefile
@@ -110,26 +112,28 @@ $(kerneldir)/Makefile: Linux_for_Tegra/source/public/kernel_src.tbz2
 	tar xjvf $< -C $(dir $<)
 	touch $@
 
-Linux_for_Tegra/source/public/kernel_src.tbz2: public_sources.tbz2
+Linux_for_Tegra/source/public/kernel_src.tbz2: l4t/r$(l4t_major).$(l4t_minor)/public_sources.tbz2
 	tar xjvf $<
 	touch $@
 
-public_sources.tbz2:
+l4t/r$(l4t_major).$(l4t_minor)/public_sources.tbz2:
+	mkdir -p $(dir $@)
 	for url in \
-			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$@ \
-			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/sources/T186/$@ \
-			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/Sources/T186/$@ \
+			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$(notdir $@) \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/sources/T186/$(notdir $@) \
+			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/Sources/T186/$(notdir $@) \
 			; do \
-		wget $${url} && exit; \
+		wget -O $@ $${url} && exit; \
 	done
 
 toolchain: toolchain/bin/aarch64-linux-gnu-gcc
 
-toolchain/bin/aarch64-linux-gnu-gcc: $(cross_toolchain)
+toolchain/bin/aarch64-linux-gnu-gcc: l4t/$(cross_toolchain)
 	mkdir -p toolchain
 	tar xJvf $< -C toolchain --strip-components 1
 	touch $@
 
-$(cross_toolchain):
-	wget -O $@ https://developer.nvidia.com/embedded/dlc/$(patsubst %.tar.xz,%,$@)
+l4t/$(cross_toolchain):
+	mkdir -p $(dir $@)
+	wget -O $@ https://developer.nvidia.com/embedded/dlc/$(patsubst %.tar.xz,%,$(notdir $@))
 endif
