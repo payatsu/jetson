@@ -9,7 +9,9 @@ export LOCALVERSION  ?= -tegra
 builddir := $(abspath build)
 l4t_major ?= 32
 l4t_minor ?= 5.1
-kerneldir ?= $(abspath Linux_for_Tegra/source/public/kernel/kernel-4.9)
+l4tdir    ?= l4t/r$(l4t_major).$(l4t_minor)
+l4ttop    ?= $(l4tdir)/Linux_for_Tegra
+kerneldir ?= $(abspath $(l4ttop)/source/public/kernel/kernel-4.9)
 cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 PATH := $(abspath toolchain/bin):$(PATH)
 
@@ -85,17 +87,18 @@ clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
 
 distclean: clean
-	$(RM) -r tags Linux_for_Tegra toolchain rootfs $(builddir)
+	$(RM) -r tags toolchain rootfs $(builddir)
+	find l4t -mindepth 2 -maxdepth 2 -type d -name Linux_for_Tegra -exec rm -fr {} +
 
 setup: l4t l4t-src toolchain
 
-l4t: Linux_for_Tegra/flash.sh
+l4t: $(l4ttop)/flash.sh
 
-Linux_for_Tegra/flash.sh: l4t/r$(l4t_major).$(l4t_minor)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
-	tar xjvf $<
+$(l4ttop)/flash.sh: $(l4tdir)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2
+	tar xjvf $< -C $(l4tdir)
 	touch $@
 
-l4t/r$(l4t_major).$(l4t_minor)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
+$(l4tdir)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64.tbz2:
 	mkdir -p $(dir $@)
 	for url in \
 			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/t186/$(notdir $@) \
@@ -108,15 +111,15 @@ l4t/r$(l4t_major).$(l4t_minor)/tegra186_linux_r$(l4t_major).$(l4t_minor)_aarch64
 
 l4t-src: $(kerneldir)/Makefile
 
-$(kerneldir)/Makefile: Linux_for_Tegra/source/public/kernel_src.tbz2
+$(kerneldir)/Makefile: $(l4ttop)/source/public/kernel_src.tbz2
 	tar xjvf $< -C $(dir $<)
 	touch $@
 
-Linux_for_Tegra/source/public/kernel_src.tbz2: l4t/r$(l4t_major).$(l4t_minor)/public_sources.tbz2
-	tar xjvf $<
+$(l4ttop)/source/public/kernel_src.tbz2: $(l4tdir)/public_sources.tbz2
+	tar xjvf $< -C $(l4tdir)
 	touch $@
 
-l4t/r$(l4t_major).$(l4t_minor)/public_sources.tbz2:
+$(l4tdir)/public_sources.tbz2:
 	mkdir -p $(dir $@)
 	for url in \
 			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$(notdir $@) \
