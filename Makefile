@@ -79,7 +79,7 @@ tags:
 		$(kerneldir) \
 		$(kerneldir)/arch/arm \
 		$(kerneldir)/arch/arm64 \
-		$(kerneldir)/../nvidia
+		$(dir $(kerneldir))nvidia
 
 clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
