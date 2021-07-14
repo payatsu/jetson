@@ -54,7 +54,7 @@ diffconfig: $(builddir)/.config
 
 $(builddir)/.config: scripts/modifyconfig
 	$(MAKE) tegra_defconfig
-	cp $@ $@.orig
+	[ -f $@.orig ] || cp $@ $@.orig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<)
 	$(MAKE) olddefconfig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<) --verify
