@@ -49,7 +49,7 @@ $(builddir)/include/config/auto.conf: $(builddir)/.config
 	$(MAKE) modules_prepare
 
 diffconfig: $(builddir)/.config
-	$(kerneldir)/scripts/diffconfig $<.orig $<
+	python $(kerneldir)/scripts/diffconfig $<.orig $<
 	cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/scripts/modifyconfig --verify
 
 $(builddir)/.config: scripts/modifyconfig
@@ -58,7 +58,7 @@ $(builddir)/.config: scripts/modifyconfig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<)
 	$(MAKE) olddefconfig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<) --verify
-	$(kerneldir)/scripts/diffconfig $@.orig $@
+	python $(kerneldir)/scripts/diffconfig $@.orig $@
 
 # 'W=1' causes build error '-Werror=missing-include-dirs' about
 # 'kernel/nvgpu-next/include' and 'kernel/nvidia-t23x/include',
