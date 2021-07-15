@@ -88,7 +88,7 @@ clean:
 
 distclean: clean
 	$(RM) -r tags toolchain rootfs $(builddir)
-	find l4t -mindepth 2 -maxdepth 2 -type d -name Linux_for_Tegra -exec rm -fr {} +
+	[ ! -d l4t ] || find l4t -mindepth 2 -maxdepth 2 -type d -name Linux_for_Tegra -exec rm -fr {} +
 
 setup: l4t l4t-src toolchain
 
