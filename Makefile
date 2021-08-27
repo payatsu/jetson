@@ -93,9 +93,10 @@ tags:
 
 clean:
 	$(RM) -r *.ko *.mod.c *.o .*.ko.cmd .*.mod.o.cmd .*.o.cmd .tmp_versions Module.symvers modules.order
+	$(RM) -r $(builddir)
 
 distclean: clean
-	$(RM) -r tags toolchain rootfs $(builddir)
+	$(RM) -r tags toolchain rootfs
 	[ ! -d l4t ] || find l4t -mindepth 2 -maxdepth 2 -type d -name Linux_for_Tegra -exec rm -fr {} +
 
 setup: l4t l4t-src toolchain
