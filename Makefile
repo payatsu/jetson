@@ -6,7 +6,7 @@ export ARCH          ?= arm64
 export CROSS_COMPILE ?= $(shell which ccache > /dev/null && echo ccache) aarch64-linux-gnu-
 export LOCALVERSION  ?= -tegra
 
-builddir := $(abspath build)
+builddir := build
 l4t_major ?= 32
 l4t_minor ?= 5.1
 l4tdir    ?= l4t/r$(l4t_major).$(l4t_minor)
@@ -51,7 +51,7 @@ endif
 	tags clean distclean setup l4t l4t-src toolchain
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
-	$(MAKE) -C $(kerneldir) V=1 W=1 O=$(builddir) M=`pwd` modules
+	$(MAKE) -C $(kerneldir) V=1 W=1 O=$(abspath $(builddir)) M=`pwd` modules
 
 $(builddir)/include/config/auto.conf: $(builddir)/.config
 	$(MAKE) modules_prepare
@@ -73,7 +73,7 @@ $(builddir)/.config: scripts/modifyconfig
 # 'kernel/nvgpu-next/include' and 'kernel/nvidia-t23x/include',
 # therefore do not add 'W=1'.
 mrproper tegra_defconfig olddefconfig modules_prepare dtbs Image modules install modules_install headers_install: l4t-src toolchain
-	$(MAKE) -C $(kerneldir) V=1 O=$(builddir) HOST_EXTRACFLAGS=-fcommon $@
+	$(MAKE) -C $(kerneldir) V=1 O=$(abspath $(builddir)) HOST_EXTRACFLAGS=-fcommon $@
 
 dtbs Image modules: $(builddir)/.config
 
