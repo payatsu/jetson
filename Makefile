@@ -30,10 +30,11 @@ export INSTALL_MOD_PATH ?= $(abspath rootfs)
 export INSTALL_HDR_PATH ?= $(abspath rootfs)/usr
 
 install: $(INSTALL_PATH)
+
 $(INSTALL_PATH):
 	mkdir -p $@
 
-dtbs_install: dtbs
+dtbs_install: $(INSTALL_PATH)
 	cp -Tr $(builddir)/arch/$(ARCH)/boot/dts $(INSTALL_PATH)/dtb
 	$(RM) -r $(INSTALL_PATH)/dtb/_ddot_
 
