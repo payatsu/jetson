@@ -15,6 +15,13 @@ kerneldir ?= $(abspath $(l4ttop)/source/public/kernel/kernel-4.9)
 cross_toolchain := l4t-gcc-7-3-1-toolchain-64-bit.tar.xz
 PATH := $(abspath toolchain/bin):$(PATH)
 
+V ?= 0
+ifeq ($(V),1)
+Q =
+else
+Q = @
+endif
+
 all: $(module).ko
 
 ifeq ($(realpath /etc/nv_tegra_release),)
@@ -37,7 +44,7 @@ release:
 		--owner root --group root -C rootfs boot lib usr
 endif
 
-.PHONY: all mrproper tegra_defconfig olddefconfig diffconfig \
+.PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
 	modules_prepare dtbs Image modules \
 	install modules_install headers_install dtbs_install release \
 	tags clean distclean setup l4t l4t-src toolchain
@@ -49,8 +56,10 @@ $(builddir)/include/config/auto.conf: $(builddir)/.config
 	$(MAKE) modules_prepare
 
 diffconfig: $(builddir)/.config
-	python $(kerneldir)/scripts/diffconfig $<.orig $<
-	cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/scripts/modifyconfig --verify
+	$(Q)python $(kerneldir)/scripts/diffconfig $<.orig $<
+
+verifyconfig: $(builddir)/.config
+	$(Q)cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/scripts/modifyconfig --verify
 
 $(builddir)/.config: scripts/modifyconfig
 	$(MAKE) tegra_defconfig
@@ -58,7 +67,6 @@ $(builddir)/.config: scripts/modifyconfig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<)
 	$(MAKE) olddefconfig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<) --verify
-	python $(kerneldir)/scripts/diffconfig $@.orig $@
 
 # 'W=1' causes build error '-Werror=missing-include-dirs' about
 # 'kernel/nvgpu-next/include' and 'kernel/nvidia-t23x/include',
