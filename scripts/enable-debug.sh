@@ -12,7 +12,7 @@ change_clock()
     clk=/sys/kernel/debug/bpmp/debug/clk
     for m in vi isp nvcsi; do
         echo 1 > ${clk}/${m}/mrq_rate_locked || return
-        cat ${clk}/${m}/max_rate | tee ${clk}/${m}/rate || return
+        cat ${clk}/${m}/max_rate > ${clk}/${m}/rate || return
     done
 }
 
@@ -35,8 +35,10 @@ enable_trace()
 
     tracing is ready.
 
-    try this after you do something that you want to trace:
-        \$ cat /sys/kernel/debug/tracing/trace
+    try the following command to see the trace result, after you do
+    something that you want to trace:
+
+        \$ sudo cat /sys/kernel/debug/tracing/trace
 
 EOF
 }
