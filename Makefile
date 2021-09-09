@@ -48,7 +48,7 @@ endif
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
 	modules_prepare dtbs Image modules \
 	install modules_install headers_install dtbs_install release \
-	tags clean distclean setup l4t l4t-src toolchain
+	tags clean distclean setup l4t l4t-src l4t-rtcpu-src toolchain
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
 	$(MAKE) -C $(kerneldir) V=1 W=1 O=$(abspath $(builddir)) M=`pwd` modules
@@ -98,7 +98,9 @@ clean:
 
 distclean: clean
 	$(RM) -r tags toolchain rootfs
-	[ ! -d l4t ] || find l4t -mindepth 2 -maxdepth 2 -type d -name Linux_for_Tegra -exec rm -fr {} +
+	[ ! -d l4t ] || find l4t -mindepth 2 -maxdepth 2 -type d -a \( \
+		-name Linux_for_Tegra -o \
+		-name l4t-rt \) -exec rm -fr {} +
 
 setup: l4t l4t-src toolchain
 
@@ -126,7 +128,7 @@ $(kerneldir)/Makefile: $(l4ttop)/source/public/kernel_src.tbz2
 	touch $@
 
 $(l4ttop)/source/public/kernel_src.tbz2: $(l4tdir)/public_sources.tbz2
-	tar xjvf $< -C $(l4tdir)
+	tar xjvf $< -C $(dir $<)
 	touch $@
 
 $(l4tdir)/public_sources.tbz2:
@@ -135,6 +137,20 @@ $(l4tdir)/public_sources.tbz2:
 			https://developer.nvidia.com/embedded/l4t/r$(l4t_major)_release_v$(l4t_minor)/r$(l4t_major)_release_v$(l4t_minor)/sources/t186/$(notdir $@) \
 			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/sources/T186/$(notdir $@) \
 			https://developer.nvidia.com/embedded/L4T/r$(l4t_major)_Release_v$(l4t_minor)/r$(l4t_major)_Release_v$(l4t_minor)-GMC3/Sources/T186/$(notdir $@) \
+			; do \
+		wget -O $@ $${url} && exit; \
+	done
+
+l4t-rtcpu-src: $(l4tdir)/l4t-rt/README.txt
+
+$(l4tdir)/l4t-rt/README.txt: $(l4tdir)/l4t_rt_aux_cpu_src.tbz2
+	tar xjvf $< -C $(dir $<)
+	touch $@
+
+$(l4tdir)/l4t_rt_aux_cpu_src.tbz2:
+	mkdir -p $(dir $@)
+	for url in \
+			https://developer.nvidia.com/embedded/l4t/r${l4t_major}_release_v${l4t_minor}/sources/t186/$(notdir $@) \
 			; do \
 		wget -O $@ $${url} && exit; \
 	done
