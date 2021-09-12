@@ -43,10 +43,16 @@ release:
 	find $(INSTALL_HDR_PATH) -type f -a \( -name .install -o -name ..install.cmd \) -exec rm -fv {} +
 	tar cJvf $(module)-`grep -oPe '(?<=^MODULE_VERSION\(")[0-9.]+(?="\);$$)' $(module).c`.$(ARCH).tar.xz \
 		--owner root --group root -C rootfs boot lib usr
+
+signed-dtbs: dtbs $(l4ttop)/flash.sh
+	cd $(l4ttop); \
+	for f in $(wildcard $(abspath $(builddir))/arch/$(ARCH)/boot/dts/*.dtb); do \
+		./l4t_sign_image.sh --file $${f} --key '' --encrypt_key '' --chip 0x19 --split False || exit; \
+	done
 endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
-	modules_prepare dtbs Image modules \
+	modules_prepare dtbs signed-dtbs Image modules \
 	install modules_install headers_install dtbs_install release \
 	tags clean distclean setup l4t l4t-src l4t-samplefs l4t-rtcpu-src toolchain
 
