@@ -50,6 +50,15 @@ signed-dtbs: dtbs $(l4ttop)/flash.sh
 		./l4t_sign_image.sh --file $${f} --key '' --encrypt_key '' --chip 0x19 --split False || exit; \
 	done
 else
+self-update: flash-Image flash-$(module) flash-signed-dtbs
+
+flash-Image: $(builddir)/arch/arm64/boot/Image
+	sudo cp $< /boot/Image
+
+flash-$(module): $(module).ko
+	sudo cp $< /lib/modules/`uname -r`/kernel/drivers/media/i2c/$(notdir $<)
+	sudo depmod
+
 flash-signed-dtbs:
 	sudo dd if=tegra194-p2888-0001-p2822-0000_sigheader.dtb.encrypt of=/dev/disk/by-partlabel/kernel-dtb bs=1M
 
@@ -60,6 +69,7 @@ endif
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
 	modules_prepare dtbs signed-dtbs Image modules \
 	install modules_install headers_install dtbs_install release \
+	self-update flash-Image flash-$(module) flash-signed-dtbs flash-rce-fw \
 	tags clean distclean setup l4t l4t-src l4t-samplefs l4t-rtcpu-src toolchain
 
 $(module).ko: $(builddir)/include/config/auto.conf $(patsubst %.o,%.c,$(obj-m))
