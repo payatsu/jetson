@@ -66,9 +66,9 @@ diffconfig: $(builddir)/.config
 	$(Q)python $(kerneldir)/scripts/diffconfig $<.orig $<
 
 verifyconfig: $(builddir)/.config
-	$(Q)cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/scripts/modifyconfig --verify
+	$(Q)cd $(dir $<); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath .)/tools/scripts/modifyconfig --verify
 
-$(builddir)/.config: scripts/modifyconfig
+$(builddir)/.config: tools/scripts/modifyconfig
 	$(MAKE) tegra_defconfig
 	[ -f $@.orig ] || cp $@ $@.orig
 	cd $(dir $@); PATH=$(kerneldir)/scripts:$${PATH}; $(abspath $<)
