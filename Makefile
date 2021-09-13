@@ -52,6 +52,9 @@ signed-dtbs: dtbs $(l4ttop)/flash.sh
 else
 flash-signed-dtbs:
 	sudo dd if=tegra194-p2888-0001-p2822-0000_sigheader.dtb.encrypt of=/dev/disk/by-partlabel/kernel-dtb bs=1M
+
+flash-rce-fw:
+	sudo dd if=tools/rce/r32.3.1_debug_camera-rtcpu-rce.img of=/dev/disk/by-partlabel/rce-fw bs=1M
 endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
