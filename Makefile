@@ -49,6 +49,9 @@ signed-dtbs: dtbs $(l4ttop)/flash.sh
 	for f in $(wildcard $(abspath $(builddir))/arch/$(ARCH)/boot/dts/*.dtb); do \
 		./l4t_sign_image.sh --file $${f} --key '' --encrypt_key '' --chip 0x19 --split False || exit; \
 	done
+else
+flash-signed-dtbs:
+	sudo dd if=tegra194-p2888-0001-p2822-0000_sigheader.dtb.encrypt of=/dev/disk/by-partlabel/kernel-dtb bs=1M
 endif
 
 .PHONY: all mrproper tegra_defconfig olddefconfig diffconfig verifyconfig \
