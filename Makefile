@@ -47,20 +47,20 @@ release:
 signed-dtbs: dtbs $(l4ttop)/flash.sh
 	cd $(l4ttop); \
 	for f in $(wildcard $(abspath $(builddir))/arch/$(ARCH)/boot/dts/*.dtb); do \
-		./l4t_sign_image.sh --file $${f} --key '' --encrypt_key '' --chip 0x19 --split False || exit; \
+		./l4t_sign_image.sh --file $${f} --key '' --chip 0x19 || exit; \
 	done
 else
 self-update: flash-Image flash-$(module) flash-signed-dtbs
 
-flash-Image: $(builddir)/arch/arm64/boot/Image
-	sudo cp $< /boot/Image
+flash-Image: Image
+	sudo cp $(builddir)/arch/arm64/boot/Image /boot/Image
 
 flash-$(module): $(module).ko
 	sudo cp $< /lib/modules/`uname -r`/kernel/drivers/media/i2c/$(notdir $<)
 	sudo depmod
 
-flash-signed-dtbs:
-	sudo dd if=tegra194-p2888-0001-p2822-0000_sigheader.dtb.encrypt of=/dev/disk/by-partlabel/kernel-dtb bs=1M
+flash-signed-dtbs: $(builddir)/arch/arm64/boot/dts/tegra194-p2888-0001-p2822-0000.dtb
+	cat $<.sig $< | sudo dd of=/dev/disk/by-partlabel/kernel-dtb bs=1M
 
 flash-rce-fw:
 	sudo dd if=tools/rce/r32.3.1_debug_camera-rtcpu-rce.img of=/dev/disk/by-partlabel/rce-fw bs=1M
