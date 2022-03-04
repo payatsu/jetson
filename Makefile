@@ -8,7 +8,7 @@ export LOCALVERSION  ?= -tegra
 
 builddir := build
 l4t_major ?= 32
-l4t_minor ?= 5.1
+l4t_minor ?= 6.1
 l4tdir    ?= l4t/r$(l4t_major).$(l4t_minor)
 l4ttop    ?= $(l4tdir)/Linux_for_Tegra
 kerneldir ?= $(abspath $(l4ttop)/source/public/kernel/kernel-4.9)
