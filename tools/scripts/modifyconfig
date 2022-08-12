@@ -101,7 +101,7 @@ config \
 	-e FUNCTION_PROFILER \
 	|| exit
 
-# dynamig debug
+# dynamic debug
 config \
 	-e EXPERT \
 	-e PRINTK \
